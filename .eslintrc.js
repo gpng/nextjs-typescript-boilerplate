@@ -3,10 +3,11 @@ module.exports = {
   env: {
     node: true,
     es6: true,
+    browser: true,
   },
   parserOptions: { ecmaVersion: 8 }, // to enable features such as async/await
   ignorePatterns: ['node_modules/*', '.next/*', '.out/*', '!.prettierrc.js'], // We don't want to lint generated files nor node_modules, but we want to lint .prettierrc.js (ignored by default by eslint)
-  extends: ['eslint:recommended'],
+  extends: ['eslint:recommended', 'prettier', 'prettier/react'],
   overrides: [
     // This configuration will apply only to TypeScript files
     {
@@ -49,6 +50,9 @@ module.exports = {
           },
         ],
         'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+        'react/forbid-prop-types': 'off',
+        'react-hooks/rules-of-hooks': 'error',
+        'react-hooks/exhaustive-deps': 'warn',
       },
     },
   ],
