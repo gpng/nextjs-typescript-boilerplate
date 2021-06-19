@@ -7,7 +7,7 @@ module.exports = {
   },
   parserOptions: { ecmaVersion: 8 }, // to enable features such as async/await
   ignorePatterns: ['node_modules/*', '.next/*', '.out/*', '!.prettierrc.js'], // We don't want to lint generated files nor node_modules, but we want to lint .prettierrc.js (ignored by default by eslint)
-  extends: ['eslint:recommended', 'prettier', 'prettier/react'],
+  extends: ['eslint:recommended', 'prettier'],
   overrides: [
     // This configuration will apply only to TypeScript files
     {
@@ -25,7 +25,6 @@ module.exports = {
         'plugin:react/recommended', // React rules
         'plugin:react-hooks/recommended', // React hooks rules
         'plugin:jsx-a11y/recommended', // Accessibility rules
-        'prettier/@typescript-eslint', // Prettier plugin
         'plugin:prettier/recommended', // Prettier recommended rules
       ],
       rules: {
