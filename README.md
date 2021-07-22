@@ -49,4 +49,4 @@ PRs accepted.
 
 ## License
 
-MIT © 2020 Gerald Png
+MIT © 2021 Gerald Png
