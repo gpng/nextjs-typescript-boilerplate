@@ -33,10 +33,10 @@ Done to make my life easier when starting NextJS Typescript apps.
    yarn dev
    ```
 
-   or if you have now-cli installed,
+   or if you have vercel-cli installed,
 
    ```
-   now dev
+   vercel dev
    ```
 
 ## Maintainers
