@@ -1,10 +1,11 @@
+import { Box, Heading } from '@chakra-ui/layout';
 import React, { FC } from 'react';
 
 const Index: FC = () => {
   return (
-    <div className="root">
-      <h1>Hello World</h1>
-    </div>
+    <Box className="root">
+      <Heading as="h1">Hello World</Heading>
+    </Box>
   );
 };
 
