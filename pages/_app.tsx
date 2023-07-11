@@ -1,12 +1,16 @@
-import React, { FC } from 'react';
-import type { AppProps } from 'next/app';
 import { ChakraProvider } from '@chakra-ui/react';
+import { NextSeo } from 'next-seo';
+import type { AppProps } from 'next/app';
+import { FC } from 'react';
 
 const App: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   return (
-    <ChakraProvider resetCSS>
-      <Component {...pageProps} />
-    </ChakraProvider>
+    <>
+      <NextSeo title="Singapore UEN Searcher" />
+      <ChakraProvider resetCSS>
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </>
   );
 };
 
