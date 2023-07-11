@@ -146,7 +146,11 @@ const Index: FC = () => {
       >
         <FormControl>
           <FormLabel>Search</FormLabel>
-          <Textarea value={input} onChange={(ev) => setInput(ev.target.value)} />
+          <Textarea
+            value={input}
+            onChange={(ev) => setInput(ev.target.value)}
+            placeholder="Each line entered will be a separate search"
+          />
         </FormControl>
         <Button type="submit" isLoading={isLoading} mt={2}>
           Search
