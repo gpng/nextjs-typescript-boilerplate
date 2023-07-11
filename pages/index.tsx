@@ -3,11 +3,11 @@ import {
   Container,
   FormControl,
   FormLabel,
-  Input,
   Table,
   TableContainer,
   Tbody,
   Td,
+  Textarea,
   Thead,
   Tr,
 } from '@chakra-ui/react';
@@ -63,6 +63,27 @@ const jsonToResult = (json: Record<string, unknown>): Result => {
   };
 };
 
+const searchOne = async (value: string): Promise<Result[]> => {
+  const results = [];
+  const promises = RESOURCE_IDS.map((resourceId) => {
+    return axios
+      .get(
+        `https://data.gov.sg/api/action/datastore_search?resource_id=${resourceId}&limit=5&q=${encodeURIComponent(
+          value,
+        )}`,
+      )
+      .then((res) => {
+        if (res.data.result?.records?.length > 0) {
+          results.push(...res.data.result.records.map(jsonToResult));
+        }
+      });
+  });
+
+  await Promise.all(promises);
+
+  return results;
+};
+
 const Index: FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -70,24 +91,32 @@ const Index: FC = () => {
 
   const handleSearch = async (): Promise<void> => {
     setIsLoading(true);
-    const results = [];
-    const promises = RESOURCE_IDS.map((resourceId) => {
-      return axios
-        .get(
-          `https://data.gov.sg/api/action/datastore_search?resource_id=${resourceId}&limit=5&q=${encodeURIComponent(
-            input,
-          )}`,
-        )
-        .then((res) => {
-          if (res.data.result?.records?.length > 0) {
-            results.push(...res.data.result.records.map(jsonToResult));
-          }
-        });
-    });
 
-    await Promise.all(promises);
+    const values = input
+      .split('\n')
+      .map((value) => value.trim())
+      .filter((value) => value.length > 0);
+
+    setSearchResults(
+      values.map((value) => ({
+        uen: value,
+        entityName: 'loading',
+        entityStatusDescription: 'loading',
+        primarySsicDescription: 'loading',
+        secondarySsicDescription: 'loading',
+      })),
+    );
+
+    for (let i = 0; i < values.length; i += 1) {
+      await searchOne(values[i]).then((results) => {
+        setSearchResults((currResults) => {
+          currResults[i] = results[0];
+          return currResults;
+        });
+      });
+    }
+
     setIsLoading(false);
-    setSearchResults(results);
   };
 
   return (
@@ -100,7 +129,7 @@ const Index: FC = () => {
       >
         <FormControl>
           <FormLabel>Search</FormLabel>
-          <Input value={input} onChange={(ev) => setInput(ev.target.value)} />
+          <Textarea value={input} onChange={(ev) => setInput(ev.target.value)} />
         </FormControl>
         <Button type="submit" isLoading={isLoading} mt={2}>
           Search
