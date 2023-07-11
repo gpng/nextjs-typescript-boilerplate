@@ -64,24 +64,29 @@ const jsonToResult = (json: Record<string, unknown>): Result => {
 };
 
 const searchOne = async (value: string): Promise<Result[]> => {
-  const results = [];
-  const promises = RESOURCE_IDS.map((resourceId) => {
-    return axios
-      .get(
-        `https://data.gov.sg/api/action/datastore_search?resource_id=${resourceId}&limit=5&q=${encodeURIComponent(
-          value,
-        )}`,
-      )
-      .then((res) => {
-        if (res.data.result?.records?.length > 0) {
-          results.push(...res.data.result.records.map(jsonToResult));
-        }
-      });
-  });
+  try {
+    const results = [];
+    const promises = RESOURCE_IDS.map((resourceId) => {
+      return axios
+        .get(
+          `https://data.gov.sg/api/action/datastore_search?resource_id=${resourceId}&limit=5&q=${encodeURIComponent(
+            value,
+          )}`,
+        )
+        .then((res) => {
+          if (res.data.result?.records?.length > 0) {
+            results.push(...res.data.result.records.map(jsonToResult));
+          }
+        });
+    });
 
-  await Promise.all(promises);
+    await Promise.all(promises);
 
-  return results;
+    return results;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 };
 
 const Index: FC = () => {
@@ -110,8 +115,20 @@ const Index: FC = () => {
     for (let i = 0; i < values.length; i += 1) {
       await searchOne(values[i]).then((results) => {
         setSearchResults((currResults) => {
-          currResults[i] = results[0];
-          return currResults;
+          const newResults = [...currResults];
+
+          if (results && results.length > 0) {
+            newResults[i] = results[0];
+          } else {
+            newResults[i] = {
+              uen: values[i],
+              entityName: 'not found',
+              entityStatusDescription: 'not found',
+              primarySsicDescription: 'not found',
+              secondarySsicDescription: 'not found',
+            };
+          }
+          return newResults;
         });
       });
     }
