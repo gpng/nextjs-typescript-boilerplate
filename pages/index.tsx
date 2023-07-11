@@ -164,8 +164,8 @@ const Index: FC = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {searchResults.map((searchResult) => (
-              <Tr key={searchResult.uen}>
+            {searchResults.map((searchResult, i) => (
+              <Tr key={searchResult.uen + i}>
                 <Td>{searchResult.uen}</Td>
                 <Td>{searchResult.entityName}</Td>
                 <Td>{searchResult.entityStatusDescription}</Td>
